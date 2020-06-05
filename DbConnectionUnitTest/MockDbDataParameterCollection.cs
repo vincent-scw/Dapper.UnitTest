@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace DbConnectionUnitTest
 {
-    class MockDbDataParameterCollection : List<IDbDataParameter>, IDataParameterCollection
+    class MockDbDataParameterCollection : List<MockDbDataParameter>, IDataParameterCollection
     {
-        private List<IDbDataParameter> list;
+        private List<MockDbDataParameter> list;
         public MockDbDataParameterCollection()
         {
-            list = new List<IDbDataParameter>();
+            list = new List<MockDbDataParameter>();
         }
 
         public object this[string parameterName]
