@@ -6,12 +6,15 @@ using System.Text;
 
 namespace DbConnectionUnitTest
 {
-    class MockDbCommand : DbCommand
+    public class MockDbCommand : DbCommand
     {
         public MockDbCommand()
         {
         }
 
+        public object ReturnValue { get; set; }
+
+        #region DbCommand
         public override string CommandText { get; set; }
         public override int CommandTimeout { get; set; }
         public override CommandType CommandType { get; set; }
@@ -30,12 +33,12 @@ namespace DbConnectionUnitTest
 
         public override int ExecuteNonQuery()
         {
-            return 1;
+            return (int)ReturnValue;
         }
 
         public override object ExecuteScalar()
         {
-            return "123";
+            return ReturnValue;
         }
 
         public override void Prepare()
@@ -52,5 +55,6 @@ namespace DbConnectionUnitTest
         {
             return new MockDbDataReader();
         }
+        #endregion
     }
 }

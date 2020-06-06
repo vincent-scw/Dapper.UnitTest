@@ -14,9 +14,11 @@ namespace DbConnectionUnitTest
 
         public override int ConnectionTimeout { get; }
 
-        public override string Database { get; }
+        private string _database;
+        public override string Database => _database;
 
-        public override ConnectionState State { get; }
+        private ConnectionState _state;
+        public override ConnectionState State => _state;
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
@@ -25,48 +27,51 @@ namespace DbConnectionUnitTest
 
         public override void ChangeDatabase(string databaseName)
         {
+            _database = databaseName;
         }
 
         public override void Close()
         {
+            _state = ConnectionState.Closed;
         }
 
         protected override DbCommand CreateDbCommand()
         {
-            return new MockDbCommand() { Connection = this };
+            var cmd = new MockDbCommand() { Connection = this, ReturnValue = _returnValues[_currentCommandIndex] };
+            _currentCommandIndex++;
+
+            return cmd;
         }
 
         public override void Open()
         {
-        }
-        #endregion
-
-        private object _returnValue;
-        /// <summary>
-        /// ReturnValue of DbCommand
-        /// </summary>
-        public object ReturnValue 
-        { 
-            get { return _returnValue; }
-            set
-            {
-                if (value is IEnumerable)
-                {
-                    throw new ArgumentException("ReturnValue shouldn't be enumerable. One object is expected.");
-                }
-
-                _returnValue = value;
-            }
+            _state = ConnectionState.Open;
         }
 
         public override string DataSource => throw new NotImplementedException();
 
         public override string ServerVersion => throw new NotImplementedException();
+        #endregion
 
+        private object[] _returnValues;
+        private int _currentCommandIndex;
+
+        /// <summary>
+        /// Clean
+        /// </summary>
         public void Clean()
         {
-            ReturnValue = null;
+            _returnValues = null;
             this.Dispose();
+        }
+
+        /// <summary>
+        /// Inject return values
+        /// </summary>
+        /// <param name="returnValues"></param>
+        public void InjectReturnValues(params object[] returnValues)
+        {
+            _returnValues = returnValues;
         }
     }
 }

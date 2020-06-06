@@ -11,6 +11,11 @@ namespace DbConnectionUnitTest
     {
         private Dictionary<string, object> _dict = new Dictionary<string, object>();
 
+        public object ReturnValue { get; set; }
+
+        private bool _readOnce = false;
+
+        #region DbDataReader
         public override object this[int ordinal] => _dict.Values.ElementAtOrDefault(ordinal);
 
         public override object this[string name] => _dict[name];
@@ -150,7 +155,6 @@ namespace DbConnectionUnitTest
                 return true;
             }
         }
-
-        private bool _readOnce = false;
+        #endregion
     }
 }
