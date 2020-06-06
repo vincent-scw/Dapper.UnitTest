@@ -2,23 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 
 namespace DbConnectionUnitTest
 {
     class MockDbDataReader : DbDataReader
     {
-        public override object this[int ordinal] => throw new NotImplementedException();
+        private Dictionary<string, object> _dict = new Dictionary<string, object>();
 
-        public override object this[string name] => throw new NotImplementedException();
+        public override object this[int ordinal] => _dict.Values.ElementAtOrDefault(ordinal);
+
+        public override object this[string name] => _dict[name];
 
         public override int Depth => throw new NotImplementedException();
 
-        public override int FieldCount => throw new NotImplementedException();
+        public override int FieldCount => 1;
 
         public override bool HasRows => throw new NotImplementedException();
 
-        public override bool IsClosed => throw new NotImplementedException();
+        public override bool IsClosed => false;
 
         public override int RecordsAffected => throw new NotImplementedException();
 
@@ -104,7 +107,7 @@ namespace DbConnectionUnitTest
 
         public override string GetName(int ordinal)
         {
-            throw new NotImplementedException();
+            return _dict.ElementAtOrDefault(ordinal).Key;
         }
 
         public override int GetOrdinal(string name)

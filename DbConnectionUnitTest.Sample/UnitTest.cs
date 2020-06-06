@@ -57,20 +57,20 @@ namespace DbConnectionUnitTest.Sample
             Assert.AreEqual(retVal.Name, employee.Name);
         }
 
-        //[TestMethod]
-        //public async Task Test_GetOneWithDapperAsync()
-        //{
-        //    // Arrange
-        //    var repo = new EmployeeRepository(_connectionFactory.Object);
-        //    var retVal = new { Id = 1, Name = "Somebody" };
-        //    _mockDbConnection.ReturnValue = retVal;
+        [TestMethod]
+        public async Task Test_GetOneWithDapperAsync()
+        {
+            // Arrange
+            var repo = new EmployeeRepository(_connectionFactory.Object);
+            var retVal = new { Id = 1, Name = "Somebody" };
+            _mockDbConnection.ReturnValue = retVal;
 
-        //    // Act
-        //    var employee = await repo.GetOneWithDapperAsync(1);
+            // Act
+            var employee = await repo.GetOneWithDapperAsync(1);
 
-        //    // Assert
-        //    Assert.AreEqual(retVal.Id, employee.Id);
-        //    Assert.AreEqual(retVal.Name, employee.Name);
-        //}
+            // Assert
+            Assert.AreEqual(retVal.Id, employee.Id);
+            Assert.AreEqual(retVal.Name, employee.Name);
+        }
     }
 }

@@ -55,16 +55,16 @@ namespace DbConnectionUnitTest.Sample
             }
         }
 
-        //public async Task<dynamic> GetOneWithDapperAsync(int id)
-        //{
-        //    using (var conn = _connectionFactory.GetConnection())
-        //    {
-        //        conn.Open();
+        public async Task<dynamic> GetOneWithDapperAsync(int id)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                conn.Open();
 
-        //        var obj = await conn.QueryFirstOrDefaultAsync<dynamic>(CommandString, new { id });
+                var obj = await conn.QueryFirstOrDefaultAsync<dynamic>(CommandString, new { id });
 
-        //        return obj;
-        //    }
-        //}
+                return obj;
+            }
+        }
     }
 }
