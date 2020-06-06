@@ -53,7 +53,7 @@ namespace DbConnectionUnitTest
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            return new MockDbDataReader();
+            return new MockDbDataReader() { ReturnValue = ReturnValue };
         }
         #endregion
     }

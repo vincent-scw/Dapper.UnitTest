@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace DbConnectionUnitTest.Sample
             // Arrange
             var repo = new EmployeeRepository(_connectionFactory.Object);
             var retVal = new { Id = 1, Name = "Somebody" };
-            _mockDbConnection.ReturnValue = retVal;
+            _mockDbConnection.InjectReturnValues(new List<dynamic> { retVal });
 
             // Act
             var employee = repo.GetOne(1);
@@ -47,7 +48,7 @@ namespace DbConnectionUnitTest.Sample
             // Arrange
             var repo = new EmployeeRepository(_connectionFactory.Object);
             var retVal = new { Id = 1, Name = "Somebody" };
-            _mockDbConnection.ReturnValue = retVal;
+            _mockDbConnection.InjectReturnValues(new List<dynamic> { retVal });
 
             // Act
             var employee = repo.GetOneWithDapper(1);
@@ -63,7 +64,7 @@ namespace DbConnectionUnitTest.Sample
             // Arrange
             var repo = new EmployeeRepository(_connectionFactory.Object);
             var retVal = new { Id = 1, Name = "Somebody" };
-            _mockDbConnection.ReturnValue = retVal;
+            _mockDbConnection.InjectReturnValues(new List<dynamic> { retVal });
 
             // Act
             var employee = await repo.GetOneWithDapperAsync(1);
