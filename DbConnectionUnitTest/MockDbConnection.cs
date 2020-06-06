@@ -2,54 +2,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 
 namespace DbConnectionUnitTest
 {
-    public class MockDbConnection : IDbConnection
+    public class MockDbConnection : DbConnection
     {
         #region IDbConnection
-        public string ConnectionString { get; set; }
+        public override string ConnectionString { get; set; }
 
-        public int ConnectionTimeout { get; set; }
+        public override int ConnectionTimeout { get; }
 
-        public string Database { get; set; }
+        public override string Database { get; }
 
-        public ConnectionState State { get; set; }
+        public override ConnectionState State { get; }
 
-        public IDbTransaction BeginTransaction()
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return new MockDbTransaction { Connection = this };
+            return new MockDbTransaction();
         }
 
-        public IDbTransaction BeginTransaction(IsolationLevel il)
+        public override void ChangeDatabase(string databaseName)
         {
-            return new MockDbTransaction { Connection = this, IsolationLevel = il };
         }
 
-        public void ChangeDatabase(string databaseName)
+        public override void Close()
         {
-            Database = databaseName;
         }
 
-        public void Close()
+        protected override DbCommand CreateDbCommand()
         {
-            State = ConnectionState.Closed;
+            return new MockDbCommand() { Connection = this };
         }
 
-        public IDbCommand CreateCommand()
+        public override void Open()
         {
-            return new MockDbCommand(this);
-        }
-
-        public void Dispose()
-        {
-            Close();
-        }
-
-        public void Open()
-        {
-            State = ConnectionState.Open;
         }
         #endregion
 
@@ -70,6 +58,10 @@ namespace DbConnectionUnitTest
                 _returnValue = value;
             }
         }
+
+        public override string DataSource => throw new NotImplementedException();
+
+        public override string ServerVersion => throw new NotImplementedException();
 
         public void Clean()
         {

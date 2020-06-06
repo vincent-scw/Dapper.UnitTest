@@ -1,142 +1,56 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
+using System.Data.Common;
+using System.Text;
 
 namespace DbConnectionUnitTest
 {
-    class MockDbCommand : IDbCommand
+    class MockDbCommand : DbCommand
     {
-        public int ExecuteCount { get; private set; }
-
-        public MockDbCommand(MockDbConnection connection)
+        public MockDbCommand()
         {
-            Connection = connection;
-
-            Parameters = new MockDbDataParameterCollection();
         }
 
-        private MockDbConnection _mockDbConnection => Connection as MockDbConnection;
+        public override string CommandText { get; set; }
+        public override int CommandTimeout { get; set; }
+        public override CommandType CommandType { get; set; }
+        public override bool DesignTimeVisible { get; set; }
+        public override UpdateRowSource UpdatedRowSource { get; set; }
+        protected override DbConnection DbConnection { get; set; }
 
-        #region Implement IDbCommand
-        public IDbConnection Connection { get; set; }
-        public IDbTransaction Transaction { get; set; }
-        public string CommandText { get; set; }
-        public int CommandTimeout { get; set; }
-        public CommandType CommandType { get; set; }
+        protected override DbParameterCollection DbParameterCollection => new MockDbParameterCollection();
 
-        public IDataParameterCollection Parameters { get; private set; }
+        protected override DbTransaction DbTransaction { get; set; }
 
-        public UpdateRowSource UpdatedRowSource { get; set; }
-
-        public void Cancel()
+        public override void Cancel()
         {
-
+            
         }
 
-        public IDbDataParameter CreateParameter()
+        public override int ExecuteNonQuery()
         {
-            return new MockDbDataParameter();
-        }
-
-        public void Dispose()
-        {
-
-        }
-
-        public int ExecuteNonQuery()
-        {
-            ExecuteCount++;
             return 1;
         }
 
-        public IDataReader ExecuteReader()
+        public override object ExecuteScalar()
         {
-            ExecuteCount++;
-            return new DataTableReader(ToDataTable(_mockDbConnection.ReturnValue));
+            return "123";
         }
 
-        public IDataReader ExecuteReader(CommandBehavior behavior)
+        public override void Prepare()
         {
-            ExecuteCount++;
-            return new DataTableReader(ToDataTable(_mockDbConnection.ReturnValue));
-        }
-
-        public object ExecuteScalar()
-        {
-            ExecuteCount++;
-            return _mockDbConnection.ReturnValue;
-        }
-
-        public void Prepare()
-        {
-
-        }
-        #endregion
-
-        private DataTable ToDataTable(object retValues)
-        {
-            if (retValues == null)
-            {
-                throw new ArgumentException("ReturnValue is null.");
-            }
-
-            var items = new List<object> { retValues };
-
-            var tb = new DataTable();
             
-            PropertyInfo[] props = retValues.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (PropertyInfo prop in props)
-            {
-                Type t = GetCoreType(prop.PropertyType);
-                tb.Columns.Add(prop.Name, t);
-            }
-
-            foreach (var item in items)
-            {
-                var values = new object[props.Length];
-
-                for (int i = 0; i < props.Length; i++)
-                {
-                    values[i] = props[i].GetValue(item, null);
-                }
-
-                tb.Rows.Add(values);
-            }
-
-            return tb;
         }
 
-        /// <summary>
-        /// Determine of specified type is nullable
-        /// </summary>
-        public static bool IsNullable(Type t)
+        protected override DbParameter CreateDbParameter()
         {
-            return !t.IsValueType || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>));
+            return new MockDbParameter();
         }
 
-        /// <summary>
-        /// Return underlying type if type is Nullable otherwise return the type
-        /// </summary>
-        public static Type GetCoreType(Type t)
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            if (t != null && IsNullable(t))
-            {
-                if (!t.IsValueType)
-                {
-                    return t;
-                }
-                else
-                {
-                    return Nullable.GetUnderlyingType(t);
-                }
-            }
-            else
-            {
-                return t;
-            }
+            return new MockDbDataReader();
         }
     }
 }

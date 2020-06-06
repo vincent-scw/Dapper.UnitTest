@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 
 namespace DbConnectionUnitTest
 {
-    class MockDbTransaction : IDbTransaction
+    class MockDbTransaction : DbTransaction
     {
-        public IDbConnection Connection { get; set; }
+        public override IsolationLevel IsolationLevel => IsolationLevel.ReadCommitted;
 
-        public IsolationLevel IsolationLevel { get; set; }
+        protected override DbConnection DbConnection => throw new NotImplementedException();
 
-        public void Commit()
+        public override void Commit()
         {
             
         }
 
-        public void Dispose()
-        {
-            
-        }
-
-        public void Rollback()
+        public override void Rollback()
         {
             
         }
