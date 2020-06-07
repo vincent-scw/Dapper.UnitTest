@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 
-namespace DbConnectionUnitTest
+namespace Dapper.UnitTest
 {
-    public class MockDbCommand : DbCommand
+    class MockDbCommand : DbCommand
     {
         public MockDbCommand()
         {

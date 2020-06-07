@@ -8,7 +8,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 
-namespace DbConnectionUnitTest
+namespace Dapper.UnitTest
 {
     class MockDbDataReader : DbDataReader
     {

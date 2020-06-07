@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace DbConnectionUnitTest.Sample
+namespace Dapper.UnitTest.Sample
 {
     [TestClass]
     public class UnitTest

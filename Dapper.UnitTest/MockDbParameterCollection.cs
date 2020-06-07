@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 
-namespace DbConnectionUnitTest
+namespace Dapper.UnitTest
 {
     class MockDbParameterCollection : DbParameterCollection
     {

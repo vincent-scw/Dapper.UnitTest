@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DbConnectionUnitTest\DbConnectionUnitTest.csproj" />
+    <ProjectReference Include="..\Dapper.UnitTest\Dapper.UnitTest.csproj" />
   </ItemGroup>
 
 </Project>

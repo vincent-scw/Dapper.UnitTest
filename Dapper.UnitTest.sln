@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbConnectionUnitTest", "DbConnectionUnitTest\DbConnectionUnitTest.csproj", "{557BDE0C-6477-451B-A4E1-07E53995833F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.UnitTest", "Dapper.UnitTest\Dapper.UnitTest.csproj", "{557BDE0C-6477-451B-A4E1-07E53995833F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbConnectionUnitTest.Sample", "DbConnectionUnitTest.Sample\DbConnectionUnitTest.Sample.csproj", "{2682D53C-CE3A-4C74-B1A0-5B34B5565C3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper.UnitTest.Sample", "Dapper.UnitTest.Sample\Dapper.UnitTest.Sample.csproj", "{2682D53C-CE3A-4C74-B1A0-5B34B5565C3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

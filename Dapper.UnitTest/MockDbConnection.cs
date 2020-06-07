@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 
-namespace DbConnectionUnitTest
+namespace Dapper.UnitTest
 {
     public class MockDbConnection : DbConnection
     {
@@ -38,7 +38,7 @@ namespace DbConnectionUnitTest
         protected override DbCommand CreateDbCommand()
         {
             if (ExecutedDbCommands == null)
-                ExecutedDbCommands = new List<MockDbCommand>();
+                ExecutedDbCommands = new List<DbCommand>();
 
             if (_returnValues.Length < ExecutedDbCommands.Count)
             {
@@ -83,6 +83,6 @@ namespace DbConnectionUnitTest
             _returnValues = returnValues;
         }
 
-        public List<MockDbCommand> ExecutedDbCommands { get; private set; }
+        public List<DbCommand> ExecutedDbCommands { get; private set; }
     }
 }

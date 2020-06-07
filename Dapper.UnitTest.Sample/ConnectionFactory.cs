@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace DbConnectionUnitTest.Sample
+namespace Dapper.UnitTest.Sample
 {
     public interface IConnectionFactory
     {
