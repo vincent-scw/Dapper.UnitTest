@@ -33,14 +33,14 @@ namespace DbConnectionUnitTest.Sample
             // Arrange
             var id = Guid.NewGuid();
             var repo = new EmployeeRepository(_connectionFactory.Object);
-            var retVal = new { Id = id, Name = "Somebody", Age = 30, Joined = DateTime.Today };
-            _mockDbConnection.InjectReturnValues(new List<dynamic> { retVal });
+            var retVal = new List<dynamic> { new { Id = id, Name = "Somebody", Age = 30, Joined = DateTime.Today } };
+            _mockDbConnection.InjectReturnValues(retVal);
 
             // Act
             var employee = repo.GetOne(id);
 
             // Assert
-            AssertObjectEqual(retVal, employee);
+            AssertObjectEqual(retVal[0], employee);
         }
 
         [TestMethod]
@@ -49,14 +49,14 @@ namespace DbConnectionUnitTest.Sample
             // Arrange
             var id = Guid.NewGuid();
             var repo = new EmployeeRepository(_connectionFactory.Object);
-            var retVal = new { Id = id, Name = "Somebody", Age = 30, Joined = DateTime.Today };
-            _mockDbConnection.InjectReturnValues(new List<dynamic> { retVal });
+            var retVal = new List<dynamic> { new { Id = id, Name = "Somebody", Age = 30, Joined = DateTime.Today } };
+            _mockDbConnection.InjectReturnValues(retVal);
 
             // Act
             var employee = repo.GetOneWithDapper(id);
 
             // Assert
-            AssertObjectEqual(retVal, employee);
+            AssertObjectEqual(retVal[0], employee);
         }
 
         [TestMethod]
@@ -65,14 +65,50 @@ namespace DbConnectionUnitTest.Sample
             // Arrange
             var id = Guid.NewGuid();
             var repo = new EmployeeRepository(_connectionFactory.Object);
-            var retVal = new { Id = id, Name = "Somebody", Age = 30, Joined = DateTime.Today };
-            _mockDbConnection.InjectReturnValues(new List<dynamic> { retVal });
+            var retVal = new List<dynamic> { new { Id = id, Name = "Somebody", Age = 30, Joined = DateTime.Today } };
+            _mockDbConnection.InjectReturnValues(retVal);
 
             // Act
             var employee = await repo.GetOneWithDapperAsync(id);
 
             // Assert
-            AssertObjectEqual(retVal, employee);
+            AssertObjectEqual(retVal[0], employee);
+        }
+
+        [TestMethod]
+        public async Task Test_GetManyWithDapperAsync()
+        {
+            // Arrange
+            var repo = new EmployeeRepository(_connectionFactory.Object);
+            var retVal = new List<EmployeeModel>
+            {
+                new EmployeeModel { Id = Guid.NewGuid(), Name = "E1", Age = 31, Joined = DateTime.Today },
+                new EmployeeModel { Id = Guid.NewGuid(), Name = "E2", Age = 32, Joined = DateTime.Today }
+            };
+            _mockDbConnection.InjectReturnValues(retVal);
+
+            // Act
+            var employees = await repo.GetManyWithDapperAsync();
+
+            // Assert
+            Assert.AreEqual(2, employees.Count);
+            AssertObjectEqual(retVal[0], employees[0]);
+            AssertObjectEqual(retVal[1], employees[1]);
+        }
+
+        [TestMethod]
+        public async Task Test_GetScalarWithDapperAsync()
+        {
+            // Arrange
+            var expectedCount = 10;
+            var repo = new EmployeeRepository(_connectionFactory.Object);
+            _mockDbConnection.InjectReturnValues(expectedCount);
+
+            // Act
+            var count = await repo.GetScalarWithDapperAsync();
+
+            // Assert
+            Assert.AreEqual(expectedCount, count);
         }
 
         private void AssertObjectEqual(dynamic retVal, EmployeeModel employee)

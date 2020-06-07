@@ -37,6 +37,11 @@ namespace DbConnectionUnitTest
 
         protected override DbCommand CreateDbCommand()
         {
+            if (_returnValues.Length < _currentCommandIndex - 1)
+            {
+                throw new ArgumentException("Require ReturnValue for DbCommand, please use InjectReturnValues method.");
+            }
+
             var cmd = new MockDbCommand() { Connection = this, ReturnValue = _returnValues[_currentCommandIndex] };
             _currentCommandIndex++;
 
@@ -62,6 +67,7 @@ namespace DbConnectionUnitTest
         public void Clean()
         {
             _returnValues = null;
+            _currentCommandIndex = 0;
             this.Dispose();
         }
 

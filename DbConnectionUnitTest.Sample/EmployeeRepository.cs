@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace DbConnectionUnitTest.Sample
     {
         private readonly IConnectionFactory _connectionFactory;
 
-        private static readonly string CommandString = "SELECT Id, Name, Age, Joined FROM dbo.Employee WHERE ID=@id";
+        private static readonly string CommandString_ONE = "SELECT Id, Name, Age, Joined FROM dbo.Employee WHERE ID=@id";
 
         public EmployeeRepository(IConnectionFactory connectionFactory)
         {
@@ -24,7 +25,7 @@ namespace DbConnectionUnitTest.Sample
                 conn.Open();
 
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = CommandString;
+                cmd.CommandText = CommandString_ONE;
                 var p = cmd.CreateParameter();
                 p.ParameterName = "@id";
                 p.DbType = System.Data.DbType.Guid;
@@ -55,7 +56,7 @@ namespace DbConnectionUnitTest.Sample
             {
                 conn.Open();
 
-                var obj = conn.QueryFirstOrDefault<EmployeeModel>(CommandString, new { id });
+                var obj = conn.QueryFirstOrDefault<EmployeeModel>(CommandString_ONE, new { id });
 
                 return obj;
             }
@@ -67,9 +68,33 @@ namespace DbConnectionUnitTest.Sample
             {
                 conn.Open();
 
-                var obj = await conn.QueryFirstOrDefaultAsync<EmployeeModel>(CommandString, new { id });
+                var obj = await conn.QueryFirstOrDefaultAsync<EmployeeModel>(CommandString_ONE, new { id });
 
                 return obj;
+            }
+        }
+
+        public async Task<List<EmployeeModel>> GetManyWithDapperAsync()
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                conn.Open();
+
+                var employees = await conn.QueryAsync<EmployeeModel>("SELECT Id, Name, Age, Joined FROM dbo.Employee");
+
+                return employees.ToList();
+            }
+        }
+
+        public async Task<int> GetScalarWithDapperAsync()
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                conn.Open();
+
+                var count = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM dbo.Employee");
+
+                return count;
             }
         }
     }
