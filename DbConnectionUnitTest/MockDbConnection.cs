@@ -37,13 +37,17 @@ namespace DbConnectionUnitTest
 
         protected override DbCommand CreateDbCommand()
         {
-            if (_returnValues.Length < _currentCommandIndex - 1)
+            if (ExecutedDbCommands == null)
+                ExecutedDbCommands = new List<MockDbCommand>();
+
+            if (_returnValues.Length < ExecutedDbCommands.Count)
             {
-                throw new ArgumentException("Require ReturnValue for DbCommand, please use InjectReturnValues method.");
+                throw new ArgumentException("Have more DbCommands than ReturnValues, please inject values via InjectReturnValues.");
             }
 
-            var cmd = new MockDbCommand() { Connection = this, ReturnValue = _returnValues[_currentCommandIndex] };
-            _currentCommandIndex++;
+            var cmd = new MockDbCommand() { Connection = this, ReturnValue = _returnValues[ExecutedDbCommands.Count] };
+            
+            ExecutedDbCommands.Add(cmd);
 
             return cmd;
         }
@@ -59,7 +63,6 @@ namespace DbConnectionUnitTest
         #endregion
 
         private object[] _returnValues;
-        private int _currentCommandIndex;
 
         /// <summary>
         /// Clean
@@ -67,7 +70,7 @@ namespace DbConnectionUnitTest
         public void Clean()
         {
             _returnValues = null;
-            _currentCommandIndex = 0;
+            ExecutedDbCommands = null;
             this.Dispose();
         }
 
@@ -79,5 +82,7 @@ namespace DbConnectionUnitTest
         {
             _returnValues = returnValues;
         }
+
+        public List<MockDbCommand> ExecutedDbCommands { get; private set; }
     }
 }

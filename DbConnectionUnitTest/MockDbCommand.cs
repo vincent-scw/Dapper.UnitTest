@@ -10,6 +10,7 @@ namespace DbConnectionUnitTest
     {
         public MockDbCommand()
         {
+            _dbParameterCollection = new MockDbParameterCollection();
         }
 
         public object ReturnValue { get; set; }
@@ -22,7 +23,8 @@ namespace DbConnectionUnitTest
         public override UpdateRowSource UpdatedRowSource { get; set; }
         protected override DbConnection DbConnection { get; set; }
 
-        protected override DbParameterCollection DbParameterCollection => new MockDbParameterCollection();
+        private MockDbParameterCollection _dbParameterCollection;
+        protected override DbParameterCollection DbParameterCollection => _dbParameterCollection;
 
         protected override DbTransaction DbTransaction { get; set; }
 

@@ -97,5 +97,25 @@ namespace DbConnectionUnitTest.Sample
                 return count;
             }
         }
+
+        public async Task<EmployeeModel> ComplicateCaseAsync(Guid id)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                conn.Open();
+
+                using (var tran = conn.BeginTransaction())
+                {
+                    var exists = await conn.ExecuteScalarAsync<bool>("SELECT 1 WHERE Id=@id", new { id });
+
+                    if (exists)
+                    {
+                        await conn.ExecuteAsync("UPDATE dbo.Employee SET Name='UpdatedName' WHERE Id=@id", new { id });
+                    }
+
+                    return await conn.QueryFirstOrDefaultAsync<EmployeeModel>(CommandString_ONE, new { id });
+                }
+            }
+        }
     }
 }

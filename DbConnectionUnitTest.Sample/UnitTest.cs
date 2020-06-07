@@ -111,6 +111,28 @@ namespace DbConnectionUnitTest.Sample
             Assert.AreEqual(expectedCount, count);
         }
 
+        [TestMethod]
+        public async Task Test_ComplicateCaseAsync()
+        {
+            // Arrange
+            var retEmployee = new { Id = Guid.NewGuid(), Name = "Somebody", Age = 30, Joined = DateTime.Today };
+            var repo = new EmployeeRepository(_connectionFactory.Object);
+            _mockDbConnection.InjectReturnValues(
+                1,
+                1,
+                new List<dynamic> { retEmployee });
+
+            // Act
+            var employee = await repo.ComplicateCaseAsync(retEmployee.Id);
+
+            // Assert
+            AssertObjectEqual(retEmployee, employee); // Return value
+            Assert.AreEqual(3, _mockDbConnection.ExecutedDbCommands.Count); // executed db command
+            Assert.AreEqual("SELECT 1 WHERE Id=@id", _mockDbConnection.ExecutedDbCommands[0].CommandText);
+            Assert.AreEqual(1, _mockDbConnection.ExecutedDbCommands[0].Parameters.Count); // db parameters
+            Assert.AreEqual(retEmployee.Id, _mockDbConnection.ExecutedDbCommands[0].Parameters[0].Value);
+        }
+
         private void AssertObjectEqual(dynamic retVal, EmployeeModel employee)
         {
             Assert.AreEqual(retVal.Id, employee.Id);
