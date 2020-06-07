@@ -3,7 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.0</Version>
+    <Version>1.0.0</Version>
+    <Description>Dapper.UnitTest is a Unit Test tool for Dapper and ADO.Net.
+It helps to verify expected database command has been executed and raise code coverage.</Description>
+    <PackageProjectUrl>https://github.com/vincent-scw/Dapper.UnitTest</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vincent-scw/Dapper.UnitTest</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Verify expected database command has been executed with expected parameters.
+Verify expected value has been returned.
+Raise code coverage.</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>vincent-scw</Authors>
+    <Company>vincent-scw</Company>
+    <PackageTags>Dapper UnitTest</PackageTags>
   </PropertyGroup>
 
 </Project>
