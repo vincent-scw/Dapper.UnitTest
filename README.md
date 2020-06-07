@@ -33,4 +33,4 @@ Assert.AreEqual(/*Number of DbCommands been executed*/, mockDbConnection.Execute
 // can also verify the executed command text & parameters
 ```
 
-For details, please see [sample](https://github.com/vincent-scw/Dapper.UnitTest/Dapper.UnitTest.Sample)
+For details, please see [samples](https://github.com/vincent-scw/Dapper.UnitTest/blob/master/Dapper.UnitTest.Sample/UnitTest.cs)
