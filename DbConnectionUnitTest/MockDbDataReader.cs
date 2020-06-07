@@ -147,7 +147,7 @@ namespace DbConnectionUnitTest
 
         public override string GetName(int ordinal)
         {
-            return Convert.ToString(this[ordinal]);
+            return _properties[ordinal].Name;
         }
 
         public override int GetOrdinal(string name)

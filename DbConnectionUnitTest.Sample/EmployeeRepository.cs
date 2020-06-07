@@ -10,14 +10,14 @@ namespace DbConnectionUnitTest.Sample
     {
         private readonly IConnectionFactory _connectionFactory;
 
-        private static readonly string CommandString = "SELECT Id, Name FROM dbo.Employee WHERE ID=@id";
+        private static readonly string CommandString = "SELECT Id, Name, Age, Joined FROM dbo.Employee WHERE ID=@id";
 
         public EmployeeRepository(IConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
 
-        public dynamic GetOne(int id)
+        public EmployeeModel GetOne(Guid id)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -27,41 +27,47 @@ namespace DbConnectionUnitTest.Sample
                 cmd.CommandText = CommandString;
                 var p = cmd.CreateParameter();
                 p.ParameterName = "@id";
-                p.DbType = System.Data.DbType.Int32;
+                p.DbType = System.Data.DbType.Guid;
                 p.Value = id;
 
                 cmd.Parameters.Add(p);
                 var reader = cmd.ExecuteReader();
 
-                object obj = null;
+                EmployeeModel obj = null;
                 while (reader.Read())
                 {
-                    obj = new { Id = reader[0], Name = reader[1] };
+                    obj = new EmployeeModel 
+                    { 
+                        Id = (Guid)reader[0], 
+                        Name = Convert.ToString(reader[1]), 
+                        Age = Convert.ToInt32(reader[2]), 
+                        Joined = Convert.ToDateTime(reader[3]) 
+                    };
                     break;
                 }
                 return obj;
             }
         }
 
-        public dynamic GetOneWithDapper(int id)
+        public EmployeeModel GetOneWithDapper(Guid id)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
                 conn.Open();
 
-                var obj = conn.QueryFirstOrDefault<dynamic>(CommandString, new { id });
+                var obj = conn.QueryFirstOrDefault<EmployeeModel>(CommandString, new { id });
 
                 return obj;
             }
         }
 
-        public async Task<dynamic> GetOneWithDapperAsync(int id)
+        public async Task<EmployeeModel> GetOneWithDapperAsync(Guid id)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
                 conn.Open();
 
-                var obj = await conn.QueryFirstOrDefaultAsync<dynamic>(CommandString, new { id });
+                var obj = await conn.QueryFirstOrDefaultAsync<EmployeeModel>(CommandString, new { id });
 
                 return obj;
             }
